@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
 import {
   getBooksSelector,
-  getBookSelector,
   removeBook,
-  updateBook,
   updateRentBook,
 } from "../../redux/books";
 import { useAppDispatch } from "../../redux/hooks";
-import BooksForm from "../BooksForm";
 
 const Books: React.FC = () => {
   const books = useSelector(getBooksSelector);
@@ -25,6 +23,9 @@ const Books: React.FC = () => {
       {books.map((book) => (
         <div key={book.id}>
           <span>{`${book.author}: ${book.title}`}</span>
+          <Link to={`/edit-book/${book.id}`}>
+            <button>Edit</button>
+          </Link>
           <button type="button" onClick={() => removeFromStore(book.id)}>
             Remove
           </button>
@@ -33,7 +34,6 @@ const Books: React.FC = () => {
           </button>
         </div>
       ))}
-      <BooksForm />
     </div>
   );
 };
