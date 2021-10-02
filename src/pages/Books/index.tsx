@@ -1,32 +1,23 @@
 import React, { useState } from "react";
-
-// import { Container, Content, Background } from './styles';
-
-const initialBooks = [
-  { id: "1", title: "1984", author: "George Orwell", pages: 0, rented: false },
-  { id: "2", title: "1984", author: "George Orwell", pages: 0, rented: false },
-];
-
-// interface BooksProps {}
-
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  pages: number;
-  rented: boolean;
-}
+import { useSelector } from "react-redux";
+import {
+  getBooksSelector,
+  getBookSelector,
+  removeBook,
+  updateBook,
+  updateRentBook,
+} from "../../redux/books";
+import { useAppDispatch } from "../../redux/hooks";
+import BooksForm from "../BooksForm";
 
 const Books: React.FC = () => {
-  const [books, setBooks] = useState<Book[]>(initialBooks);
+  const books = useSelector(getBooksSelector);
 
-  const simpleBook = {
-    id: "3",
-    title: "PHP Moderno",
-    author: "xxx",
-    pages: 0,
-    rented: false,
-  };
+  const dispatch = useAppDispatch();
+
+  const removeFromStore = (id: string): any => dispatch(removeBook(id));
+
+  const rentBook = (id: string): any => {dispatch(updateRentBook(id))};
 
   return (
     <div>
@@ -34,14 +25,15 @@ const Books: React.FC = () => {
       {books.map((book) => (
         <div key={book.id}>
           <span>{`${book.author}: ${book.title}`}</span>
+          <button type="button" onClick={() => removeFromStore(book.id)}>
+            Remove
+          </button>
+          <button type="button" onClick={() => rentBook(book.id)}>
+            Alugar
+          </button>
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() => setBooks((prevBooks) => [simpleBook, ...prevBooks])}
-      >
-        Add Book
-      </button>
+      <BooksForm />
     </div>
   );
 };
