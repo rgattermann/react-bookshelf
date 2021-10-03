@@ -6,15 +6,15 @@ import AddBook from '../pages/AddBook';
 import EditBook from '../pages/EditBook';
 import PrivateRoute from '../components/PrivateRoute';
 import Login from '../pages/Login';
+import NotFound from '../pages/NotFound';
 
-// TODO: create page 404
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={Login} />
     <PrivateRoute path="/books" exact component={Books} />
     <PrivateRoute path="/books/add" exact component={AddBook} />
     <PrivateRoute path="/books/edit/:id" exact component={EditBook} />
-    <PrivateRoute path="*" exact component={Login} />
+    <Route path="*" exact component={NotFound} />
   </Switch>
 );
 export default Routes;
