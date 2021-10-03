@@ -6,7 +6,7 @@ export const login = (loginInfo: User): Promise<boolean> =>
     setTimeout(() => {
       // mock call
       resolve(
-        loginInfo.login === fakeUser.login &&
+        loginInfo.email === fakeUser.email &&
         loginInfo.password === fakeUser.password);
     }, 500);
   });

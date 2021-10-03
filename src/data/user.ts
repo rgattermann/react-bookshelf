@@ -1,6 +1,6 @@
 import { User } from '../interfaces/user';
 
 export const fakeUser: User = {
-  login: 'admin',
+  email: 'admin@admin.com',
   password: 'password'
 };

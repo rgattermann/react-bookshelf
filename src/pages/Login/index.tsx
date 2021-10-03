@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
+import { FormHandles } from '@unform/core';
+import getValidationErrors from '../../utils/getValidationErrors';
+
 import { User } from '../../interfaces/user';
 import { userAuthenticated, userNotAuthenticated } from '../../redux/auth';
 import { useAppDispatch } from '../../redux/hooks';
@@ -19,6 +23,7 @@ import { Container, Content, Background } from './styles';
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const formRef = useRef<FormHandles>(null);
 
   // TODO: Verify is loogged, redirect to books or dashboard
 
@@ -40,9 +45,28 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmmit = (data: object): void => {
-    console.log(data);
-  };
+  const handleSubmmit = useCallback(async (data: object) => {
+    try {
+      formRef.current?.setErrors({});
+
+      const schemaValidation = Yup.object().shape({
+        email: Yup.string()
+          .required("E-mail is required")
+          .email("Enter a valid e-mail"),
+        password: Yup.string().min(6, "At least 6 digits"),
+      });
+
+      await schemaValidation.validate(data, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+      }
+    }
+  }, []);
 
   /*const handleSubmmit = (event: React.FormEvent): void => {
     event.preventDefault();
@@ -58,10 +82,10 @@ const Login: React.FC = () => {
       <Content>
         <img src={logoImg} alt="Bookshelf logo" />
 
-        <Form onSubmit={handleSubmmit}>
+        <Form ref={formRef} onSubmit={handleSubmmit}>
           <h1>Login</h1>
           <Input
-            name="username"
+            name="email"
             icon={FiMail}
             type="text"
             placeholder="E-mail"
