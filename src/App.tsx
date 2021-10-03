@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 
 import Routes from './routes';
 import store from './redux/store';
+import GlobalStyle from './styles/global';
 
 const App: React.FC = () => (
   <>
@@ -12,6 +13,7 @@ const App: React.FC = () => (
         <Routes />
       </BrowserRouter>
     </Provider>
+    <GlobalStyle/>
   </>
 );
 
