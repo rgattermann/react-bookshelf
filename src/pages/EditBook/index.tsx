@@ -38,7 +38,7 @@ const BooksForm: React.FC = () => {
     } else {
       dispatch(updateBook(book));
 
-      history.push("/");
+      history.push("/books");
     }
   };
 

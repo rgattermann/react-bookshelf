@@ -31,7 +31,7 @@ const AddBook: React.FC = () => {
 
       dispatch(addBook(book));
 
-      history.push('/');
+      history.push('/books');
     }
   };
 

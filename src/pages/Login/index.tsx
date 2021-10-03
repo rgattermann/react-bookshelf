@@ -1,23 +1,36 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { Book } from '../../interfaces/book';
-import { addBook } from '../../redux/books';
+import { User } from '../../interfaces/user';
+import { userAuthenticated, userNotAuthenticated } from '../../redux/auth';
 import { useAppDispatch } from '../../redux/hooks';
+import {login as loginService} from '../../services/auth';
 
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
-  const [username, setUsername] = useState('');
+  // TODO: Verify is loogged, redirect to books or dashboard
+
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  const loginSucceeded = (isValid: boolean) => {
+    if (isValid) {
+      dispatch(userAuthenticated());
+      history.push('/books');
+    } else {
+      dispatch(userNotAuthenticated());
+    }
+  };
 
   const handleSubmmit = (event: React.FormEvent): void => {
     event.preventDefault();
 
     setSubmitted(true);
+    const user: User = { login, password };
 
+    loginService(user).then(loginSucceeded);
   };
 
   return (
@@ -29,8 +42,8 @@ const Login: React.FC = () => {
           type="text"
           placeholder="username"
           name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
         />
         <label htmlFor="password">Password</label>
         <input
