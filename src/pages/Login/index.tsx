@@ -7,6 +7,8 @@ import {login as loginService} from '../../services/auth';
 
 import logoImg from '../../assets/logo.svg';
 
+import { Form } from '@unform/web';
+
 import { FiMail, FiLock } from 'react-icons/fi';
 
 import Input from '../../components/Input';
@@ -24,6 +26,11 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
+  // assim que for chamado em tela
+  //useEffect(() => {
+
+  //}, []);
+
   const loginSucceeded = (isValid: boolean) => {
     if (isValid) {
       dispatch(userAuthenticated());
@@ -33,20 +40,25 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmmit = (event: React.FormEvent): void => {
+  const handleSubmmit = (data: object): void => {
+    console.log(data);
+  };
+
+  /*const handleSubmmit = (event: React.FormEvent): void => {
     event.preventDefault();
 
     setSubmitted(true);
     const user: User = { login, password };
 
     loginService(user).then(loginSucceeded);
-  };
+  };*/
 
   return (
     <Container>
       <Content>
         <img src={logoImg} alt="Bookshelf logo" />
-        <form onSubmit={handleSubmmit}>
+
+        <Form onSubmit={handleSubmmit}>
           <h1>Login</h1>
           <Input
             name="username"
@@ -65,7 +77,7 @@ const Login: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button type="submit">Login</Button>
-        </form>
+        </Form>
       </Content>
       <Background />
     </Container>
