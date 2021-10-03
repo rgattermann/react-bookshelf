@@ -5,6 +5,10 @@ import { userAuthenticated, userNotAuthenticated } from '../../redux/auth';
 import { useAppDispatch } from '../../redux/hooks';
 import {login as loginService} from '../../services/auth';
 
+import logoImg from '../../assets/logo.svg';
+
+import { Container, Content, Background } from './styles';
+
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
@@ -34,28 +38,30 @@ const Login: React.FC = () => {
   };
 
   return (
-    <>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmmit}>
-        <label htmlFor="title">username</label>
-        <input
-          type="text"
-          placeholder="username"
-          name="username"
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          placeholder="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
-    </>
+    <Container>
+      <Content>
+        <img src={logoImg} alt="Bookshelf logo"/>
+        <form onSubmit={handleSubmmit}>
+          <h1>Login</h1>
+          <input
+            type="text"
+            placeholder="E-mail"
+            name="username"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit">Login</button>
+        </form>
+      </Content>
+      <Background />
+    </Container>
   );
 };
 
