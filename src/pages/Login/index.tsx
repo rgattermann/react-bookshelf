@@ -25,57 +25,44 @@ const Login: React.FC = () => {
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
 
-  // TODO: Verify is loogged, redirect to books or dashboard
+  const handleLogin = useCallback(({email, password}) => {
+    const user: User = { email, password };
 
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-
-  // assim que for chamado em tela
-  //useEffect(() => {
-
-  //}, []);
-
-  const loginSucceeded = (isValid: boolean) => {
-    if (isValid) {
-      dispatch(userAuthenticated());
-      history.push('/books');
-    } else {
-      dispatch(userNotAuthenticated());
-    }
-  };
-
-  const handleSubmmit = useCallback(async (data: object) => {
-    try {
-      formRef.current?.setErrors({});
-
-      const schemaValidation = Yup.object().shape({
-        email: Yup.string()
-          .required("E-mail is required")
-          .email("Enter a valid e-mail"),
-        password: Yup.string().min(6, "At least 6 digits"),
-      });
-
-      await schemaValidation.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-
-        formRef.current?.setErrors(errors);
+    loginService(user).then((isValid: boolean) => {
+      if (isValid) {
+        dispatch(userAuthenticated());
+        history.push('/books');
+      } else {
+        dispatch(userNotAuthenticated());
       }
-    }
+    });
   }, []);
 
-  /*const handleSubmmit = (event: React.FormEvent): void => {
-    event.preventDefault();
+  const handleSubmmit = useCallback(
+    async (data: object) => {
+      try {
+        formRef.current?.setErrors({});
 
-    setSubmitted(true);
-    const user: User = { login, password };
+        const schemaValidation = Yup.object().shape({
+          email: Yup.string()
+            .required("E-mail is required")
+            .email("Enter a valid e-mail"),
+          password: Yup.string().min(6, "At least 6 digits"),
+        });
 
-    loginService(user).then(loginSucceeded);
-  };*/
+        await schemaValidation.validate(data, { abortEarly: false });
+
+        handleLogin(data);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
+      }
+    },
+    []
+  );
 
   return (
     <Container>
@@ -89,16 +76,12 @@ const Login: React.FC = () => {
             icon={FiMail}
             type="text"
             placeholder="E-mail"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
           />
           <Input
             name="password"
             icon={FiLock}
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
           />
           <Button type="submit">Login</Button>
         </Form>
