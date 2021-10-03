@@ -7,6 +7,11 @@ import {login as loginService} from '../../services/auth';
 
 import logoImg from '../../assets/logo.svg';
 
+import { FiMail, FiLock } from 'react-icons/fi';
+
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+
 import { Container, Content, Background } from './styles';
 
 const Login: React.FC = () => {
@@ -40,24 +45,26 @@ const Login: React.FC = () => {
   return (
     <Container>
       <Content>
-        <img src={logoImg} alt="Bookshelf logo"/>
+        <img src={logoImg} alt="Bookshelf logo" />
         <form onSubmit={handleSubmmit}>
           <h1>Login</h1>
-          <input
+          <Input
+            name="username"
+            icon={FiMail}
             type="text"
             placeholder="E-mail"
-            name="username"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
           />
-          <input
+          <Input
+            name="password"
+            icon={FiLock}
             type="password"
             placeholder="Password"
-            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Login</button>
+          <Button type="submit">Login</Button>
         </form>
       </Content>
       <Background />
