@@ -45,4 +45,7 @@ export const getBooksSelector = (state: RootState): Book[] => state.books;
 export const getBookSelector = (state: RootState, id: string): any =>
   state.books.find((book) => book.id === id);
 
+export const getFilteredBooks = (state: RootState, search: string): Book[] =>
+  state.books.filter(book => book.title.includes(search));
+
 export default booksSlice.reducer;
