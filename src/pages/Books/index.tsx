@@ -1,50 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import { userNotAuthenticated } from '../../redux/auth';
 import {
   getBooksSelector,
   removeBook,
   updateRentBook,
 } from "../../redux/books";
 import { useAppDispatch } from "../../redux/hooks";
+import Header from "../../components/Header";
+import {
+  Container,
+  BooksList,
+  TitleContainer,
+  BookContent,
+  BookItem,
+} from "./styles";
+import {
+  FiTrash2,
+  FiPenTool,
+  FiDollarSign,
+} from "react-icons/fi";
+import Button from '../../components/Button';
 
 const Books: React.FC = () => {
   const history = useHistory();
   const books = useSelector(getBooksSelector);
-
   const dispatch = useAppDispatch();
 
-  const removeFromStore = (id: string): any => dispatch(removeBook(id));
+  const handleRemove = useCallback((id: string) => {
+    // verify if rented is true, no delete
+    // emit toast
+    dispatch(removeBook(id));
+  }, []);
 
-  const rentBook = (id: string): any => {dispatch(updateRentBook(id))};
+  const handleRent = useCallback((id: string) => {
+    dispatch(updateRentBook(id));
+  }, []);
 
-  const logout = (): any => {
-    dispatch(userNotAuthenticated());
-    history.push('/');
-  };
+  const handleEdit = useCallback((id: string) => {
+    history.push(`/books/edit/${id}`);
+  }, []);
 
   return (
-    <div>
-      <h2>Books List</h2>
-      <button type="button" onClick={() => logout()}>
-        Logout
-      </button>
-      {books.map((book) => (
-        <div key={book.id}>
-          <span>{`${book.author}: ${book.title}`}</span>
-          <Link to={`/books/edit/${book.id}`}>
-            <button>Edit</button>
+    <>
+      <Header />
+      <Container>
+        <TitleContainer>
+          <h1>Books List</h1>
+          <Link to="/books/add">
+            <Button type="submit">Add book</Button>
           </Link>
-          <button type="button" onClick={() => removeFromStore(book.id)}>
-            Remove
-          </button>
-          <button type="button" onClick={() => rentBook(book.id)}>
-            Alugar
-          </button>
-        </div>
-      ))}
-    </div>
+        </TitleContainer>
+        <BooksList>
+          {books.map((book) => (
+            <BookItem key={book.id}>
+              <BookContent>
+                <strong>{book.title}</strong>
+                <p>{book.author}</p>
+                <p>{book.pages} pages</p>
+                <p>
+                  <strong>Rented: </strong>
+                  {book.rented ? "Yes" : "No"}
+                </p>
+              </BookContent>
+              <FiPenTool
+                title="Edit"
+                size={20}
+                onClick={() => handleEdit(book.id)}
+              />
+              <FiDollarSign
+                title="Rent"
+                size={20}
+                onClick={() => handleRent(book.id)}
+              />
+              <FiTrash2
+                title="Remove"
+                size={20}
+                onClick={() => handleRemove(book.id)}
+              />
+            </BookItem>
+          ))}
+        </BooksList>
+      </Container>
+    </>
   );
 };
 
