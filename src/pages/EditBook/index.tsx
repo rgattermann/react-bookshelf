@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { Book } from "../../interfaces/book";
-import { addBook } from "../../redux/books";
+import { updateBook } from "../../redux/books";
 import { useAppDispatch } from "../../redux/hooks";
 import { FormHandles } from "@unform/core";
 
@@ -50,7 +50,7 @@ const AddBook: React.FC = () => {
       rented: false,
     };
 
-    dispatch(addBook(book));
+    dispatch(updateBook(book));
 
     addToast({
       type: "success",

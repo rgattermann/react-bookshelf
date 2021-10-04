@@ -35,7 +35,7 @@ const Header: React.FC = () => {
           </Profile>
 
           <button type="button" onClick={handleLogout}>
-            <FiPower />
+            <FiPower title="Logout"/>
           </button>
         </HeaderContent>
       </HeaderContainer>

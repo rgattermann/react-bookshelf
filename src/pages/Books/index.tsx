@@ -50,20 +50,36 @@ const Books: React.FC = () => {
   );
 
   const handleRent = useCallback(
-    (id: string) => {
-      dispatch(updateRentBook(id));
-      addToast({
-        type: "success",
-        title: "Book",
-        description: "Book rental updated successfully",
-      });
+    (id: string, rented: boolean) => {
+      if (rented) {
+        addToast({
+          type: "error",
+          title: "Book",
+          description: "It's not possible to rent a book already rented",
+        });
+      } else {
+        dispatch(updateRentBook(id));
+        addToast({
+          type: "success",
+          title: "Book",
+          description: "Book rental updated successfully",
+        });
+      }
     },
     [addToast]
   );
 
-  const handleEdit = useCallback((id: string) => {
-    history.push(`/books/edit/${id}`);
-  }, []);
+  const handleEdit = useCallback((id: string, rented: boolean) => {
+    if (rented) {
+      addToast({
+        type: "error",
+        title: "Book",
+        description: "It's not possible edit a book already rented",
+      });
+    } else {
+      history.push(`/books/edit/${id}`);
+    }
+  }, [addToast]);
 
   return (
     <>
@@ -90,12 +106,12 @@ const Books: React.FC = () => {
               <FiPenTool
                 title="Edit"
                 size={20}
-                onClick={() => handleEdit(book.id)}
+                onClick={() => handleEdit(book.id, book.rented)}
               />
               <FiDollarSign
                 title="Rent"
                 size={20}
-                onClick={() => handleRent(book.id)}
+                onClick={() => handleRent(book.id, book.rented)}
               />
               <FiTrash2
                 title="Remove"
