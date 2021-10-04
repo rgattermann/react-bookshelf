@@ -19,24 +19,40 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { Container, Content, Background } from './styles';
+import { useToast } from '../../hooks/toast';
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
+  const { addToast }  = useToast();
 
-  const handleLogin = useCallback(({email, password}) => {
-    const user: User = { email, password };
+  const handleLogin = useCallback(
+    ({ email, password }) => {
+      const user: User = { email, password };
 
-    loginService(user).then((isValid: boolean) => {
-      if (isValid) {
-        dispatch(userAuthenticated());
-        history.push('/books');
-      } else {
-        dispatch(userNotAuthenticated());
-      }
-    });
-  }, []);
+      loginService(user).then((isValid: boolean) => {
+        if (isValid) {
+          dispatch(userAuthenticated());
+          history.push("/books");
+        } else {
+          dispatch(userNotAuthenticated());
+          addToast({
+            type: "error",
+            title: " Authentication error",
+            description:
+              "There was an error logging in, check the credentials.",
+          });
+        }
+      });
+    },
+    [addToast]
+  );
 
   const handleSubmmit = useCallback(
     async (data: object) => {
@@ -58,10 +74,12 @@ const Login: React.FC = () => {
           const errors = getValidationErrors(err);
 
           formRef.current?.setErrors(errors);
+
+          return;
         }
       }
     },
-    []
+    [addToast]
   );
 
   return (
