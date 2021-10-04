@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
@@ -20,11 +20,6 @@ import Button from '../../components/Button';
 
 import { Container, Content, Background } from './styles';
 import { useToast } from '../../hooks/toast';
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
 
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -51,7 +46,7 @@ const Login: React.FC = () => {
         }
       });
     },
-    [addToast]
+    [addToast, dispatch, history]
   );
 
   const handleSubmmit = useCallback(
@@ -79,7 +74,7 @@ const Login: React.FC = () => {
         }
       }
     },
-    [addToast]
+    [handleLogin]
   );
 
   return (

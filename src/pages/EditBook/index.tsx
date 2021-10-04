@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { Book } from "../../interfaces/book";
 import { updateBook } from "../../redux/books";
 import { useAppDispatch } from "../../redux/hooks";
@@ -21,12 +20,6 @@ import { createSelectorHook } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useToast } from '../../hooks/toast';
 
-interface BookFormData {
-  title: string;
-  author: string;
-  pages: number;
-}
-
 const AddBook: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
@@ -41,50 +34,56 @@ const AddBook: React.FC = () => {
     state.books.find((book) => book.id === bookId)
   );
 
-  const handleSave = useCallback(({ title, author, pages }) => {
-    const book: Book = {
-      id: bookId,
-      title,
-      author,
-      pages,
-      rented: false,
-    };
+  const handleSave = useCallback(
+    ({ title, author, pages }) => {
+      const book: Book = {
+        id: bookId,
+        title,
+        author,
+        pages,
+        rented: false,
+      };
 
-    dispatch(updateBook(book));
+      dispatch(updateBook(book));
 
-    addToast({
-      type: "success",
-      title: "Book",
-      description: "Book successfully updated",
-    });
-
-    history.push("/books");
-  }, []);
-
-  const handleSubmmit = useCallback(async (data: object) => {
-    try {
-      formRef.current?.setErrors({});
-
-      const schemaValidation = Yup.object().shape({
-        title: Yup.string().required("Title is required"),
-        author: Yup.string().required("Author is required"),
-        pages: Yup.number()
-          .integer()
-          .min(1, "Number of pages must be more than 0")
-          .required("Number of pages are required"),
+      addToast({
+        type: "success",
+        title: "Book",
+        description: "Book successfully updated",
       });
 
-      await schemaValidation.validate(data, { abortEarly: false });
+      history.push("/books");
+    },
+    [addToast, history, dispatch, bookId]
+  );
 
-      handleSave(data);
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
+  const handleSubmmit = useCallback(
+    async (data: object) => {
+      try {
+        formRef.current?.setErrors({});
 
-        formRef.current?.setErrors(errors);
+        const schemaValidation = Yup.object().shape({
+          title: Yup.string().required("Title is required"),
+          author: Yup.string().required("Author is required"),
+          pages: Yup.number()
+            .integer()
+            .min(1, "Number of pages must be more than 0")
+            .required("Number of pages are required"),
+        });
+
+        await schemaValidation.validate(data, { abortEarly: false });
+
+        handleSave(data);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
       }
-    }
-  }, []);
+    },
+    [handleSave]
+  );
 
   return (
     <>

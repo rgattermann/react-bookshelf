@@ -1,5 +1,5 @@
 import React from 'react';
-import { animated, useTransition } from "react-spring";
+import { useTransition } from "react-spring";
 
 import Toast from './Toast';
 

@@ -12,10 +12,10 @@ const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
-    const handleLogout = useCallback(() => {
-      dispatch(userNotAuthenticated());
-      history.push('/');
-    }, []);
+  const handleLogout = useCallback(() => {
+    dispatch(userNotAuthenticated());
+    history.push("/");
+  }, [history, dispatch]);
 
   return (
     <Container>

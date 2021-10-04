@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { Book } from '../../interfaces/book';
@@ -25,50 +25,56 @@ const AddBook: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
 
-  const handleSave = useCallback(({ title, author, pages }) => {
-    const book: Book = {
-      id: uuidv4(),
-      title,
-      author,
-      pages,
-      rented: false,
-    };
+  const handleSave = useCallback(
+    ({ title, author, pages }) => {
+      const book: Book = {
+        id: uuidv4(),
+        title,
+        author,
+        pages,
+        rented: false,
+      };
 
-    dispatch(addBook(book));
+      dispatch(addBook(book));
 
-    addToast({
-      type: "success",
-      title: "Book",
-      description: "Book successfully saved",
-    });
-
-    history.push('/books');
-  }, []);
-
-  const handleSubmmit = useCallback(async (data: object) => {
-    try {
-      formRef.current?.setErrors({});
-
-      const schemaValidation = Yup.object().shape({
-        title: Yup.string().required("Title is required"),
-        author: Yup.string().required("Author is required"),
-        pages: Yup.number()
-          .integer()
-          .min(1, "Number of pages must be more than 0")
-          .required("Number of pages are required"),
+      addToast({
+        type: "success",
+        title: "Book",
+        description: "Book successfully saved",
       });
 
-      await schemaValidation.validate(data, { abortEarly: false });
+      history.push("/books");
+    },
+    [addToast, dispatch, history]
+  );
 
-      handleSave(data);
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
+  const handleSubmmit = useCallback(
+    async (data: object) => {
+      try {
+        formRef.current?.setErrors({});
 
-        formRef.current?.setErrors(errors);
+        const schemaValidation = Yup.object().shape({
+          title: Yup.string().required("Title is required"),
+          author: Yup.string().required("Author is required"),
+          pages: Yup.number()
+            .integer()
+            .min(1, "Number of pages must be more than 0")
+            .required("Number of pages are required"),
+        });
+
+        await schemaValidation.validate(data, { abortEarly: false });
+
+        handleSave(data);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
       }
-    }
-  }, []);
+    },
+    [handleSave]
+  );
 
   return (
     <>

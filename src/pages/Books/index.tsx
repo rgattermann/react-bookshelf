@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
+import { createSelectorHook } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import {
   getBooksSelector,
@@ -20,11 +20,14 @@ import {
   FiPenTool,
   FiDollarSign,
 } from "react-icons/fi";
+
 import Button from '../../components/Button';
 import { useToast } from '../../hooks/toast';
+import { RootState } from '../../redux/store';
 
 const Books: React.FC = () => {
   const history = useHistory();
+  const useSelector = createSelectorHook<RootState>();
   const books = useSelector(getBooksSelector);
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
@@ -46,7 +49,7 @@ const Books: React.FC = () => {
         });
       }
     },
-    []
+    [dispatch, addToast]
   );
 
   const handleRent = useCallback(
@@ -66,7 +69,7 @@ const Books: React.FC = () => {
         });
       }
     },
-    [addToast]
+    [addToast, dispatch]
   );
 
   const handleEdit = useCallback((id: string, rented: boolean) => {
@@ -79,7 +82,7 @@ const Books: React.FC = () => {
     } else {
       history.push(`/books/edit/${id}`);
     }
-  }, [addToast]);
+  }, [addToast, history]);
 
   return (
     <>
@@ -88,7 +91,7 @@ const Books: React.FC = () => {
         <TitleContainer>
           <h1>Books List</h1>
           <Link to="/books/add">
-            <Button type="submit">Add book</Button>
+            <Button type="button">Add book</Button>
           </Link>
         </TitleContainer>
         <BooksList>

@@ -11,9 +11,9 @@ import NotFound from '../pages/NotFound';
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={Login} />
-    <Route path="/books" exact component={Books} />
-    <Route path="/books/add" exact component={AddBook} />
-    <Route path="/books/edit/:id" exact component={EditBook} />
+    <PrivateRoute path="/books" exact component={Books} />
+    <PrivateRoute path="/books/add" exact component={AddBook} />
+    <PrivateRoute path="/books/edit/:id" exact component={EditBook} />
     <Route path="*" exact component={NotFound} />
   </Switch>
 );
