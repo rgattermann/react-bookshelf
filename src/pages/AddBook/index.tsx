@@ -45,7 +45,10 @@ const AddBook: React.FC = () => {
       const schemaValidation = Yup.object().shape({
         title: Yup.string().required("Title is required"),
         author: Yup.string().required("Author is required"),
-        pages: Yup.number().required("Number of pages are required"),
+        pages: Yup.number()
+          .integer()
+          .min(1, "Number of pages must be more than 0")
+          .required("Number of pages are required"),
       });
 
       await schemaValidation.validate(data, { abortEarly: false });

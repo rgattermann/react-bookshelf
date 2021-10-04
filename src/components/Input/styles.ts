@@ -51,6 +51,10 @@ export const Container = styled.div<ContainerProps>`
     }
   }
 
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
   svg {
     margin-right: 16px;
   }
