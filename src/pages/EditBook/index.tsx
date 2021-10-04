@@ -17,9 +17,9 @@ import { FiUser, FiBook, FiFileText, FiArrowLeft } from "react-icons/fi";
 import { Container, Content } from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
 import Header from "../../components/Header";
-import CheckboxSlider from "../../components/CheckboxSlider";
 import { createSelectorHook } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { useToast } from '../../hooks/toast';
 
 interface BookFormData {
   title: string;
@@ -31,6 +31,7 @@ const AddBook: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
+  const { addToast } = useToast();
 
   const { id: bookId }: { id: string } = useParams();
 
@@ -50,6 +51,12 @@ const AddBook: React.FC = () => {
     };
 
     dispatch(addBook(book));
+
+    addToast({
+      type: "success",
+      title: "Book",
+      description: "Book successfully updated",
+    });
 
     history.push("/books");
   }, []);

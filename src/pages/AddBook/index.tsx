@@ -17,12 +17,13 @@ import { FiUser, FiBook, FiFileText, FiArrowLeft } from "react-icons/fi";
 import { Container, Content } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
 import Header from '../../components/Header';
-import CheckboxSlider from "../../components/CheckboxSlider";
+import { useToast } from '../../hooks/toast';
 
 const AddBook: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
+  const { addToast } = useToast();
 
   const handleSave = useCallback(({ title, author, pages }) => {
     const book: Book = {
@@ -34,6 +35,12 @@ const AddBook: React.FC = () => {
     };
 
     dispatch(addBook(book));
+
+    addToast({
+      type: "success",
+      title: "Book",
+      description: "Book successfully saved",
+    });
 
     history.push('/books');
   }, []);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import {
@@ -21,21 +21,45 @@ import {
   FiDollarSign,
 } from "react-icons/fi";
 import Button from '../../components/Button';
+import { useToast } from '../../hooks/toast';
 
 const Books: React.FC = () => {
   const history = useHistory();
   const books = useSelector(getBooksSelector);
   const dispatch = useAppDispatch();
+  const { addToast } = useToast();
 
-  const handleRemove = useCallback((id: string) => {
-    // verify if rented is true, no delete
-    // emit toast
-    dispatch(removeBook(id));
-  }, []);
+  const handleRemove = useCallback(
+    (id: string, rented: boolean) => {
+      if (rented) {
+        addToast({
+          type: "error",
+          title: "Book",
+          description: "Book is rented, can't remove it",
+        });
+      } else {
+        dispatch(removeBook(id));
+        addToast({
+          type: "success",
+          title: "Book",
+          description: "Book successfully removed",
+        });
+      }
+    },
+    []
+  );
 
-  const handleRent = useCallback((id: string) => {
-    dispatch(updateRentBook(id));
-  }, []);
+  const handleRent = useCallback(
+    (id: string) => {
+      dispatch(updateRentBook(id));
+      addToast({
+        type: "success",
+        title: "Book",
+        description: "Book rental updated successfully",
+      });
+    },
+    [addToast]
+  );
 
   const handleEdit = useCallback((id: string) => {
     history.push(`/books/edit/${id}`);
@@ -76,7 +100,7 @@ const Books: React.FC = () => {
               <FiTrash2
                 title="Remove"
                 size={20}
-                onClick={() => handleRemove(book.id)}
+                onClick={() => handleRemove(book.id, book.rented)}
               />
             </BookItem>
           ))}
