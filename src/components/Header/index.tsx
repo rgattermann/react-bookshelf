@@ -29,8 +29,8 @@ const Header: React.FC = () => {
               alt="Admin"
             />
             <div>
-              <span>Bem vindo,</span>
-              <strong>Admin</strong>
+              <span>Welcome,</span>
+              <strong>Administrator</strong>
             </div>
           </Profile>
 
