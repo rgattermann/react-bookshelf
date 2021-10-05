@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { createSelectorHook } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { FiTrash2, FiPenTool, FiDollarSign } from 'react-icons/fi';
+import { FiTrash2, FiPenTool, FiDollarSign, FiSearch } from 'react-icons/fi';
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
 import {
   getBooksSelector,
   removeBook,
@@ -13,6 +15,7 @@ import {
   Container,
   BooksList,
   TitleContainer,
+  SearchContainer,
   BookContent,
   BookItem,
 } from './styles';
@@ -20,13 +23,20 @@ import {
 import Button from '../../components/Button';
 import { useToast } from '../../hooks/toast';
 import { RootState } from '../../redux/store';
+import Input from '../../components/Input';
+
+interface SearchFormData {
+  search?: string;
+}
 
 const Books: React.FC = () => {
   const history = useHistory();
+  const formRef = useRef<FormHandles>(null);
   const useSelector = createSelectorHook<RootState>();
-  const books = useSelector(getBooksSelector);
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
+
+  const booksResults = useSelector(getBooksSelector);
 
   const handleRemove = useCallback(
     (id: string, rented: boolean) => {
@@ -83,6 +93,13 @@ const Books: React.FC = () => {
     [addToast, history],
   );
 
+  const handleSearch = useCallback((data: SearchFormData) => {
+    if (data?.search) {
+      // const searchBooks = useSelector<RootState>(state => getFilteredBooks(state, data.search));
+      // setBooksResults(searchBooks.books);
+    }
+  }, []);
+
   return (
     <>
       <Header />
@@ -93,8 +110,19 @@ const Books: React.FC = () => {
             <Button type="button">Add book</Button>
           </Link>
         </TitleContainer>
+        <SearchContainer>
+          <Form ref={formRef} onSubmit={handleSearch}>
+            <Input
+              name="search"
+              icon={FiSearch}
+              type="text"
+              placeholder="Search"
+            />
+            <Button type="submit">Search</Button>
+          </Form>
+        </SearchContainer>
         <BooksList>
-          {books.map(book => (
+          {booksResults.map(book => (
             <BookItem key={book.id}>
               <BookContent>
                 <strong>{book.title}</strong>

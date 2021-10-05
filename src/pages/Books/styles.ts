@@ -17,6 +17,15 @@ export const TitleContainer = styled.div`
   max-width: 768px;
 `;
 
+export const SearchContainer = styled.div`
+  margin-top: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  max-width: 768px;
+`;
+
 export const BooksList = styled.div`
   margin-top: 80px;
   max-width: 768px;
