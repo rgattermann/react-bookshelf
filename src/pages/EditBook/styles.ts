@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { shade } from "polished";
+import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Container = styled.div`
   height: 50vh;
@@ -34,7 +34,7 @@ export const Content = styled.div`
       margin-right: 16px;
     }
     &:hover {
-      color: ${shade(0.2, "#f4ede8")};
+      color: ${shade(0.2, '#f4ede8')};
     }
   }
 `;

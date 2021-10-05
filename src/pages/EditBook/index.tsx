@@ -1,24 +1,28 @@
-import React, { useCallback, useRef } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { Book } from "../../interfaces/book";
-import { updateBook } from "../../redux/books";
-import { useAppDispatch } from "../../redux/hooks";
-import { FormHandles } from "@unform/core";
-
-import * as Yup from "yup";
-
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-
-import { Form } from "@unform/web";
-import { FiUser, FiBook, FiFileText, FiArrowLeft } from "react-icons/fi";
-
-import { Container, Content } from "./styles";
-import getValidationErrors from "../../utils/getValidationErrors";
-import Header from "../../components/Header";
+import React, { useCallback, useRef } from 'react';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
+import { Form } from '@unform/web';
+import { FiUser, FiBook, FiFileText, FiArrowLeft } from 'react-icons/fi';
 import { createSelectorHook } from 'react-redux';
+import { Book } from '../../interfaces/book';
+import { updateBook } from '../../redux/books';
+import { useAppDispatch } from '../../redux/hooks';
+
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+
+import { Container, Content } from './styles';
+import getValidationErrors from '../../utils/getValidationErrors';
+import Header from '../../components/Header';
 import { RootState } from '../../redux/store';
 import { useToast } from '../../hooks/toast';
+
+interface EditFormData {
+  title: string;
+  author: string;
+  pages: number;
+}
 
 const AddBook: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -30,8 +34,8 @@ const AddBook: React.FC = () => {
 
   const useSelector = createSelectorHook<RootState>();
 
-  const bookFromStore = useSelector((state) =>
-    state.books.find((book) => book.id === bookId)
+  const bookFromStore = useSelector(state =>
+    state.books.find(book => book.id === bookId),
   );
 
   const handleSave = useCallback(
@@ -47,28 +51,28 @@ const AddBook: React.FC = () => {
       dispatch(updateBook(book));
 
       addToast({
-        type: "success",
-        title: "Book",
-        description: "Book successfully updated",
+        type: 'success',
+        title: 'Book',
+        description: 'Book successfully updated',
       });
 
-      history.push("/books");
+      history.push('/books');
     },
-    [addToast, history, dispatch, bookId]
+    [addToast, history, dispatch, bookId],
   );
 
   const handleSubmmit = useCallback(
-    async (data: object) => {
+    async (data: EditFormData) => {
       try {
         formRef.current?.setErrors({});
 
         const schemaValidation = Yup.object().shape({
-          title: Yup.string().required("Title is required"),
-          author: Yup.string().required("Author is required"),
+          title: Yup.string().required('Title is required'),
+          author: Yup.string().required('Author is required'),
           pages: Yup.number()
             .integer()
-            .min(1, "Number of pages must be more than 0")
-            .required("Number of pages are required"),
+            .min(1, 'Number of pages must be more than 0')
+            .required('Number of pages are required'),
         });
 
         await schemaValidation.validate(data, { abortEarly: false });
@@ -82,7 +86,7 @@ const AddBook: React.FC = () => {
         }
       }
     },
-    [handleSave]
+    [handleSave],
   );
 
   return (
@@ -125,5 +129,5 @@ const AddBook: React.FC = () => {
     </>
   );
 };
-//FiDollarSign
+// FiDollarSign
 export default AddBook;

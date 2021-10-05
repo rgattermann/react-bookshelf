@@ -1,23 +1,27 @@
 import React, { useCallback, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
+import { Form } from '@unform/web';
+import { FiUser, FiBook, FiFileText, FiArrowLeft } from 'react-icons/fi';
 import { Book } from '../../interfaces/book';
 import { addBook } from '../../redux/books';
 import { useAppDispatch } from '../../redux/hooks';
-import { FormHandles } from '@unform/core';
 
-import * as Yup from "yup";
-
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-
-import { Form } from '@unform/web';
-import { FiUser, FiBook, FiFileText, FiArrowLeft } from "react-icons/fi";
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 import { Container, Content } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
 import Header from '../../components/Header';
 import { useToast } from '../../hooks/toast';
+
+interface AddFormData {
+  title: string;
+  author: string;
+  pages: number;
+}
 
 const AddBook: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,28 +42,28 @@ const AddBook: React.FC = () => {
       dispatch(addBook(book));
 
       addToast({
-        type: "success",
-        title: "Book",
-        description: "Book successfully saved",
+        type: 'success',
+        title: 'Book',
+        description: 'Book successfully saved',
       });
 
-      history.push("/books");
+      history.push('/books');
     },
-    [addToast, dispatch, history]
+    [addToast, dispatch, history],
   );
 
   const handleSubmmit = useCallback(
-    async (data: object) => {
+    async (data: AddFormData) => {
       try {
         formRef.current?.setErrors({});
 
         const schemaValidation = Yup.object().shape({
-          title: Yup.string().required("Title is required"),
-          author: Yup.string().required("Author is required"),
+          title: Yup.string().required('Title is required'),
+          author: Yup.string().required('Author is required'),
           pages: Yup.number()
             .integer()
-            .min(1, "Number of pages must be more than 0")
-            .required("Number of pages are required"),
+            .min(1, 'Number of pages must be more than 0')
+            .required('Number of pages are required'),
         });
 
         await schemaValidation.validate(data, { abortEarly: false });
@@ -73,7 +77,7 @@ const AddBook: React.FC = () => {
         }
       }
     },
-    [handleSave]
+    [handleSave],
   );
 
   return (
@@ -108,5 +112,5 @@ const AddBook: React.FC = () => {
     </>
   );
 };
-//FiDollarSign
+// FiDollarSign
 export default AddBook;

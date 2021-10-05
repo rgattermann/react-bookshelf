@@ -4,4 +4,4 @@ export interface Book {
   author: string;
   pages: number;
   rented: boolean;
-};
+}

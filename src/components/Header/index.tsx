@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
-import { FiPower } from "react-icons/fi";
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
+import { FiPower } from 'react-icons/fi';
 
-import { Container, HeaderContainer, HeaderContent, Profile } from "./styles";
+import { Container, HeaderContainer, HeaderContent, Profile } from './styles';
 
-import logoImg from "../../assets/logo.svg";
-import { useHistory } from 'react-router';
+import logoImg from '../../assets/logo.svg';
 import { useAppDispatch } from '../../redux/hooks';
 import { userNotAuthenticated } from '../../redux/auth';
 
@@ -14,7 +14,7 @@ const Header: React.FC = () => {
 
   const handleLogout = useCallback(() => {
     dispatch(userNotAuthenticated());
-    history.push("/");
+    history.push('/');
   }, [history, dispatch]);
 
   return (
@@ -35,7 +35,7 @@ const Header: React.FC = () => {
           </Profile>
 
           <button type="button" onClick={handleLogout}>
-            <FiPower title="Logout"/>
+            <FiPower title="Logout" />
           </button>
         </HeaderContent>
       </HeaderContainer>

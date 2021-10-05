@@ -14,7 +14,7 @@ const booksSlice = createSlice({
     updateBook: (state, action: PayloadAction<Book>) => {
       const { id, title, author, pages, rented } = action.payload;
 
-      const existingBook = state.find((book) => book.id === id);
+      const existingBook = state.find(book => book.id === id);
 
       if (existingBook) {
         existingBook.title = title;
@@ -25,7 +25,7 @@ const booksSlice = createSlice({
     },
 
     updateRentBook: (state, action: PayloadAction<string>) => {
-      const existingBook = state.find((book) => book.id === action.payload);
+      const existingBook = state.find(book => book.id === action.payload);
 
       if (existingBook) {
         existingBook.rented = !existingBook.rented;
@@ -33,17 +33,15 @@ const booksSlice = createSlice({
     },
 
     removeBook: (state, action: PayloadAction<string>) => {
-      return state.filter((book) => book.id !== action.payload);
+      return state.filter(book => book.id !== action.payload);
     },
   },
 });
 
-export const { addBook, removeBook, updateBook, updateRentBook } = booksSlice.actions;
+export const { addBook, removeBook, updateBook, updateRentBook } =
+  booksSlice.actions;
 
 export const getBooksSelector = (state: RootState): Book[] => state.books;
-
-export const getBookSelector = (state: RootState, id: string): any =>
-  state.books.find((book) => book.id === id);
 
 export const getFilteredBooks = (state: RootState, search: string): Book[] =>
   state.books.filter(book => book.title.includes(search));

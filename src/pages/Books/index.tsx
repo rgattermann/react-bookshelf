@@ -1,25 +1,21 @@
-import React, { useCallback } from "react";
-import { createSelectorHook } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import React, { useCallback } from 'react';
+import { createSelectorHook } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import { FiTrash2, FiPenTool, FiDollarSign } from 'react-icons/fi';
 import {
   getBooksSelector,
   removeBook,
   updateRentBook,
-} from "../../redux/books";
-import { useAppDispatch } from "../../redux/hooks";
-import Header from "../../components/Header";
+} from '../../redux/books';
+import { useAppDispatch } from '../../redux/hooks';
+import Header from '../../components/Header';
 import {
   Container,
   BooksList,
   TitleContainer,
   BookContent,
   BookItem,
-} from "./styles";
-import {
-  FiTrash2,
-  FiPenTool,
-  FiDollarSign,
-} from "react-icons/fi";
+} from './styles';
 
 import Button from '../../components/Button';
 import { useToast } from '../../hooks/toast';
@@ -36,53 +32,56 @@ const Books: React.FC = () => {
     (id: string, rented: boolean) => {
       if (rented) {
         addToast({
-          type: "error",
-          title: "Book",
+          type: 'error',
+          title: 'Book',
           description: "Book is rented, can't remove it",
         });
       } else {
         dispatch(removeBook(id));
         addToast({
-          type: "success",
-          title: "Book",
-          description: "Book successfully removed",
+          type: 'success',
+          title: 'Book',
+          description: 'Book successfully removed',
         });
       }
     },
-    [dispatch, addToast]
+    [dispatch, addToast],
   );
 
   const handleRent = useCallback(
     (id: string, rented: boolean) => {
       if (rented) {
         addToast({
-          type: "error",
-          title: "Book",
+          type: 'error',
+          title: 'Book',
           description: "It's not possible to rent a book already rented",
         });
       } else {
         dispatch(updateRentBook(id));
         addToast({
-          type: "success",
-          title: "Book",
-          description: "Book rental updated successfully",
+          type: 'success',
+          title: 'Book',
+          description: 'Book rental updated successfully',
         });
       }
     },
-    [addToast, dispatch]
+    [addToast, dispatch],
   );
 
-  const handleEdit = useCallback((id: string, rented: boolean) => {
-    if (rented) {
-      addToast({
-        type: "error",
-        title: "Book",
-        description: "It's not possible edit a book already rented",
-      });
-    } else {
-      history.push(`/books/edit/${id}`);
-    }
-  }, [addToast, history]);
+  const handleEdit = useCallback(
+    (id: string, rented: boolean) => {
+      if (rented) {
+        addToast({
+          type: 'error',
+          title: 'Book',
+          description: "It's not possible edit a book already rented",
+        });
+      } else {
+        history.push(`/books/edit/${id}`);
+      }
+    },
+    [addToast, history],
+  );
 
   return (
     <>
@@ -95,7 +94,7 @@ const Books: React.FC = () => {
           </Link>
         </TitleContainer>
         <BooksList>
-          {books.map((book) => (
+          {books.map(book => (
             <BookItem key={book.id}>
               <BookContent>
                 <strong>{book.title}</strong>
@@ -103,7 +102,7 @@ const Books: React.FC = () => {
                 <p>{book.pages} pages</p>
                 <p>
                   <strong>Rented: </strong>
-                  {book.rented ? "Yes" : "No"}
+                  {book.rented ? 'Yes' : 'No'}
                 </p>
               </BookContent>
               <FiPenTool
